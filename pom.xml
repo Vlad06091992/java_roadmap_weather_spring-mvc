@@ -43,6 +43,12 @@
           <version>7.0.6</version>
           <scope>compile</scope>
       </dependency>
+      <dependency>
+          <groupId>jakarta.servlet</groupId>
+          <artifactId>jakarta.servlet-api</artifactId>
+          <version>6.0.0</version> <!-- Use 5.0.0 for Spring Boot 3.0/3.1 or 6.0.0 for 3.2+ -->
+          <scope>provided</scope>
+      </dependency>
   </dependencies>
   <build>
     <finalName>weather-spring-mvc</finalName>
