@@ -1,4 +1,4 @@
-package configs;
+package weather_app.configs;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -9,7 +9,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     }
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{WebConfiguration.class, ThymeleafConfig.class};
+        return new Class<?>[]{WebConfiguration.class, ThymeleafConfig.class, HibernateConf.class};
     }
     @Override
     protected String[] getServletMappings() {

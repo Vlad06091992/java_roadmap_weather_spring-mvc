@@ -1,4 +1,4 @@
-package configs;
+package weather_app.configs;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -20,17 +20,19 @@ public class HibernateConf {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("entities");
+        sessionFactory.setPackagesToScan("weather_app.entities");
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;
     }
 
+    @Bean
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/yourdb");
-        config.setUsername("user");
-        config.setPassword("pass");
+        config.setJdbcUrl("jdbc:postgresql://localhost:5432/weather_db");
+        config.setDriverClassName("org.postgresql.Driver");
+        config.setUsername("java_user");
+        config.setPassword("java_password");
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.setMaximumPoolSize(10);
         return new HikariDataSource(config);
@@ -44,12 +46,12 @@ public class HibernateConf {
         return transactionManager;
     }
 
-    private final Properties hibernateProperties() {
+    private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "create-drop");
+                "hibernate.hbm2ddl.auto", "none");
         hibernateProperties.setProperty(
-                "hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+                "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
 
         return hibernateProperties;
     }
