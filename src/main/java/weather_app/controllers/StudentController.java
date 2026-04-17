@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import weather_app.entities.Student;
+import weather_app.networkAdapter.WeatherData;
 import weather_app.services.StudentsService;
 
 import java.util.Arrays;
@@ -13,9 +14,11 @@ import java.util.List;
 @Controller
 public class StudentController {
     private final StudentsService studentsService;
+    private final WeatherData weatherData;
 
-    public StudentController(StudentsService studentsService) {
+    public StudentController(StudentsService studentsService, WeatherData weatherData) {
         this.studentsService = studentsService;
+        this.weatherData = weatherData;
     }
 
 
@@ -39,9 +42,18 @@ public class StudentController {
     }
 
 
-    @GetMapping("/test2")
+    //отдаст JSON
+    @GetMapping(path = "/test2", produces = "application/json")
     @ResponseBody
     public String getTest2() {
-        return "тест 2";
+        return weatherData.getWeatherString();
+    }
+
+
+    //отдаст строку
+    @GetMapping("/test3")
+    @ResponseBody
+    public String getTest3() {
+        return weatherData.getWeatherString();
     }
 }
