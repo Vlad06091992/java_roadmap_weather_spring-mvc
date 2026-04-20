@@ -24,14 +24,17 @@
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required="" value="">
+                    <div th:if="${usernameError != null}" th:text="${usernameError}" class="form-text text-danger">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" required="" value="">
+                    <div th:if="${passwordError != null}" th:text="${passwordError}" class="form-text text-danger">
                 </div>
                 <div class="mb-3">
                     <label for="repeat-password" class="form-label">Repeat password</label>
                     <input type="password" class="form-control" id="repeat-password" name="repeatedPassword" required="" value="">
+                    <div th:if="${repeatedPasswordError != null}" th:text="${repeatedPasswordError}" class="form-text text-danger">
                 </div>
 
                 <input type="hidden" name="redirect_to" value="http://localhost/">
