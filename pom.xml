@@ -82,6 +82,13 @@
           <artifactId>liquibase-core</artifactId>
           <version>4.27.0</version>
       </dependency>
+      <!-- Source: https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
+      <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-crypto</artifactId>
+          <version>7.0.4</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
   <build>
     <finalName>weather-spring-mvc</finalName>

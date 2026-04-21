@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import weather_app.components.ViewErrorHandler;
 import weather_app.dto.RegisterDTO;
+import weather_app.services.UserService;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Registration {
     private final ViewErrorHandler viewErrorHandler;
+    private final UserService userService ;
 
     @PostMapping("/register")
     public String register(@ModelAttribute @Valid RegisterDTO registerDTO, BindingResult bindingResult, Model model) {
@@ -27,6 +29,7 @@ public class Registration {
             return "register";
         } else {
             //создать юзера, куда-то редиректунть
+            userService.addUser(registerDTO.getUsername(), registerDTO.getPassword());
             System.out.println(errorList);
             return "register";
         }
