@@ -9,7 +9,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     }
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[]{WebConfiguration.class, ThymeleafConfig.class, HibernateConf.class};
+        return new Class<?>[]{WebConfiguration.class, ThymeleafConfig.class, HibernateConf.class, LiquibaseConfig.class};
     }
     @Override
     protected String[] getServletMappings() {
