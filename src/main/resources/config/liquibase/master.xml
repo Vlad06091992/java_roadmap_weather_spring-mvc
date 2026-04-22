@@ -8,4 +8,6 @@
     <include file="config/liquibase/changelogs/001-init.xml"/>
     <include file="config/liquibase/changelogs/002-upd-users-table.xml"/>
     <include file="config/liquibase/changelogs/003-upd-users-table-password-length.xml"/>
+    <include file="config/liquibase/changelogs/004-upd-users-table-login-unique.xml"/>
+    <include file="config/liquibase/changelogs/005-upd-users-table-not-null-values.xml"/>
 </databaseChangeLog>
