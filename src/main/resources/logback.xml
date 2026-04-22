@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <!-- Логи для вашего приложения (ВАЖНО: укажите ваш пакет) -->
+    <logger name="weather_app" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Логи Spring (можно оставить INFO, чтобы не было слишком много) -->
+    <logger name="org.springframework" level="info">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- Корневой логгер (ловит всё остальное) -->
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
