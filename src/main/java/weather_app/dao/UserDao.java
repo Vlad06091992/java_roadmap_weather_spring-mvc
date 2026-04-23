@@ -5,7 +5,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 import weather_app.entities.User;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDao {
@@ -14,7 +14,6 @@ public class UserDao {
     public UserDao(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
-
 
     public User addUser(String username, String passwordHash) {
         Session session = sessionFactory.getCurrentSession();
@@ -25,5 +24,12 @@ public class UserDao {
         return user;
     }
 
-
+    public Optional<User> findUserByLogin(String login) {
+        Session session = sessionFactory.getCurrentSession();
+        User user = session
+                .createQuery("from User where login=:login", User.class)
+                .setParameter("login", login)
+                .uniqueResult();
+        return Optional.ofNullable(user);
+    }
 }
