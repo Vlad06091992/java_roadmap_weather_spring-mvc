@@ -32,10 +32,9 @@ public class RegistrationController {
             return "register";
         } else {
             log.info("user succefully created {}", registerDTO);
-            //создать юзера, куда-то редиректунть
             userService.addUser(registerDTO.getUsername(), registerDTO.getPassword());
             System.out.println(errorList);
-            return "register";
+            return "redirect:/login";
         }
     }
 
