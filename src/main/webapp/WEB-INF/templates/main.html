@@ -11,7 +11,7 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="https://zhukovsd.github.io/weather-viewer-html-layouts/index.html#">
-            <img src="../images/weather-app.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img th:src="@{/images/weather-app.png}" alt="" width="30" height="24" class="d-inline-block align-text-top">
             Weather Tracker
         </a>
         <div class="d-flex align-items-center">
@@ -41,7 +41,7 @@
                         <div class="position-absolute weather-card-delete-form">
                             <button class="btn-close" aria-label="Delete"></button>
                         </div>
-                        <img class="card-img-top img-fluid" src="../images/01n@4x.png" alt="Weather icon">
+                        <img class="card-img-top img-fluid" th:src="@{/images/01n@4x.png}" alt="Weather icon">
                         <div class="card-body d-flex flex-column">
                             <h1 class="card-text">7°C</h1>
                             <h3 class="card-title">Tbilisi, GE</h3>
@@ -57,7 +57,7 @@
                         <div class="position-absolute weather-card-delete-form">
                             <button class="btn-close" aria-label="Delete"></button>
                         </div>
-                        <img class="card-img-top img-fluid" src="../images/04n@4x.png" alt="Weather icon">
+                        <img class="card-img-top img-fluid" th:src="@{/images/04n@4x.png}" alt="Weather icon">
                         <div class="card-body d-flex flex-column">
                             <h1 class="card-text">-4°C</h1>
                             <h3 class="card-title">Saint Petersburg, RU</h3>
@@ -73,7 +73,7 @@
                         <div class="position-absolute weather-card-delete-form">
                             <button class="btn-close" aria-label="Delete"></button>
                         </div>
-                        <img class="card-img-top img-fluid" src="../images/01n@4x.png" alt="Weather icon">
+                        <img class="card-img-top img-fluid" th:src="@{/images/01n@4x.png}" alt="Weather icon">
                         <div class="card-body d-flex flex-column">
                             <h1 class="card-text">-1°C</h1>
                             <h3 class="card-title">Seoul, KR</h3>
@@ -89,7 +89,7 @@
                         <div class="position-absolute weather-card-delete-form">
                             <button class="btn-close" aria-label="Delete"></button>
                         </div>
-                        <img class="card-img-top img-fluid" src="../images/13n@4x.png" alt="Weather icon">
+                        <img class="card-img-top img-fluid" th:src="@{/images/13n@4x.png}" alt="Weather icon">
                         <div class="card-body d-flex flex-column">
                             <h1 class="card-text">-4°C</h1>
                             <h3 class="card-title">Severodvinsk, RU</h3>
@@ -105,7 +105,7 @@
                         <div class="position-absolute weather-card-delete-form">
                             <button class="btn-close" aria-label="Delete"></button>
                         </div>
-                        <img class="card-img-top img-fluid" src="../images/04n@4x.png" alt="Weather icon">
+                        <img class="card-img-top img-fluid" th:src="@{/images/04n@4x.png}" alt="Weather icon">
                         <div class="card-body d-flex flex-column">
                             <h1 class="card-text">21°C</h1>
                             <h3 class="card-title">Sydney, AU</h3>
