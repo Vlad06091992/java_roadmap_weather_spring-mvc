@@ -11,4 +11,9 @@
     <include file="config/liquibase/changelogs/004-upd-users-table-login-unique.xml"/>
     <include file="config/liquibase/changelogs/005-upd-users-table-not-null-values.xml"/>
     <include file="config/liquibase/changelogs/006-create-sessions-table.xml"/>
+    <include file="config/liquibase/changelogs/007-create-user-locations-table.xml"/>
+    <include file="config/liquibase/changelogs/008-user-locations-auto-generate-id.xml"/>
+    <include file="config/liquibase/changelogs/009-user-locations-add-longitude-and-latitude-constraint.xml"/>
+    <include file="config/liquibase/changelogs/010-user-locations-add-longitude-and-latitude-and-userid-constraint.xml"/>
+    <include file="config/liquibase/changelogs/011-user-locations-drop-longitude-and-latitude-constraint.xml"/>
 </databaseChangeLog>

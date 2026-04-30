@@ -1,9 +1,9 @@
 package weather_app.networkAdapter;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-@Service
+@Component
 public class WeatherData {
 
     private final RestClient restClient;
@@ -32,4 +32,31 @@ public class WeatherData {
 
         return result;
     }
+
+    public String getLocationsByName(String name){
+        try {
+            RestClient.RequestHeadersSpec<?> uri = restClient
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .scheme("https")
+                            .host("api.openweathermap.org")
+                            .path("geo/1.0/direct")
+                            .queryParam("q", name)
+                            .queryParam("limit", 5)
+                            .queryParam("appid", "ecf3f1f2a2b3e1d4cdc05e6752da3a60")
+                            .build());
+
+
+
+            String result = uri
+                    .retrieve()
+                    .body(String.class);
+
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+
 }

@@ -98,6 +98,27 @@
           <artifactId>logback-classic</artifactId>
           <version>1.5.25</version>
       </dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+          <version>2.21.2</version>
+          <scope>compile</scope>
+      </dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-databind</artifactId>
+          <version>2.21.2</version>
+          <scope>compile</scope>
+      </dependency>
+      <!-- Source: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+      <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-annotations</artifactId>
+          <version>2.21</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
   <build>
     <finalName>weather-spring-mvc</finalName>
@@ -106,8 +127,8 @@
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-compiler-plugin</artifactId>
               <configuration>
-                  <source>11</source>
-                  <target>11</target>
+                  <source>15</source>
+                  <target>15</target>
               </configuration>
           </plugin>
       </plugins>

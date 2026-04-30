@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="7" author="you">
+        <sql>
+            CREATE TABLE public.user_locations
+            (
+                id bigint NOT NULL,
+                user_id bigint NOT NULL,
+                name character varying NOT NULL,
+                latitude double precision NOT NULL,
+                longitude double precision NOT NULL,
+                PRIMARY KEY (id),
+                CONSTRAINT fk FOREIGN KEY (user_id)
+                    REFERENCES public.users (id) MATCH SIMPLE
+                    ON UPDATE NO ACTION
+                    ON DELETE NO ACTION
+                    NOT VALID
+            );
+
+            ALTER TABLE IF EXISTS public.locations
+                OWNER to postgres;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
