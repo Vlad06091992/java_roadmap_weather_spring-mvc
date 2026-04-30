@@ -27,9 +27,9 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 //TODO эта конфигурация ломает отдачу статики
-// когда пользователь не авторизован, в частности, не отдаются
-        //        CSS  стили
-        //        registry.addInterceptor(myInterceptor)
+// когда пользователь не авторизован, в частности, не отдаются CSS  стили
+
+//                registry.addInterceptor(myInterceptor)
 //                .addPathPatterns("/**")
 //                .excludePathPatterns("/login","/register");
 //TODO добавить интерцептор, который редиректит с логина и регистрации на главную, если авторизован пользователь
