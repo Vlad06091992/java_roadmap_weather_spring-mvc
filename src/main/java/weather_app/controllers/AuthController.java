@@ -39,7 +39,7 @@ public class AuthController {
         } else {
             //залогинить юзера, добавить ему куки, сделать редирект на главную
             User user = authService.loginUser(loginDTO.getUsername(), loginDTO.getPassword());
-            authService.setCredentials(response, user.getId());
+            response.addCookie(authService.setCredentials(user.getId()));
             return "redirect:/";
         }
     }

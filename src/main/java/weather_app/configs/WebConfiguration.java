@@ -1,5 +1,8 @@
 package weather_app.configs;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -23,7 +26,16 @@ public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(myInterceptor).addPathPatterns("/**").excludePathPatterns("/login","/register");
+//TODO эта конфигурация ломает отдачу статики
+// когда пользователь не авторизован, в частности, не отдаются
+        //        CSS  стили
+        //        registry.addInterceptor(myInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/login","/register");
+//TODO добавить интерцептор, который редиректит с логина и регистрации на главную, если авторизован пользователь
+        registry.addInterceptor(myInterceptor)
+                .addPathPatterns("/", "search-location").order(1);
+//                .excludePathPatterns("/login","/register");
     }
 
     @Override
@@ -32,8 +44,6 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler("/css/**").addResourceLocations("/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/js/");
     }
-
-    // Implement configuration methods...
 
     @Bean
     public RestClient getRestClient() {

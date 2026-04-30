@@ -1,8 +1,6 @@
 package weather_app.services;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +17,7 @@ import weather_app.exceptions.NotAuthorizedException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAmount;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -43,18 +42,12 @@ public class AuthService {
         return user;
     }
 
-    public void setCredentials(HttpServletResponse response, Long userId) {
+    public Cookie setCredentials(Long userId) {
         UserSession userSession = createSession(userId);
-        Cookie cookie = cookieManager.createSessionCookie(userSession.getId());
-        response.addCookie(cookie);
+        return cookieManager.createSessionCookie(userSession.getId());
     }
 
-
-    private void setUserIdAttribute(HttpServletRequest request, Long userId) {
-        request.setAttribute("userId", userId);
-    }
-
-    public boolean validateSession(Cookie cookie, HttpServletRequest request) {
+    public Optional<Long> getAuthorizedUserId(Cookie cookie) {
         String uuid = cookie.getValue();
         UserSession userSession = userSessionDao
                 .getUserSessionById(uuid)
@@ -65,10 +58,9 @@ public class AuthService {
         OffsetDateTime now = OffsetDateTime.now();
 
         if (expiresAr.isBefore(now)) {
-            return false;
+            return Optional.empty();
         } else {
-            setUserIdAttribute(request, userId);
-            return true;
+            return Optional.of(userId);
         }
     }
 
@@ -83,14 +75,15 @@ public class AuthService {
 
         userSessionDao.removeUserSessions(userId);
         Cookie invalidatedSessionCookie = cookieManager.invalidateCookie(sessionCookie);
-       return invalidatedSessionCookie;
+        return invalidatedSessionCookie;
     }
 
 
     private UserSession createSession(Long userId) {
-        //        TemporalAmount period = Period.ofDays(10);
-        TemporalAmount duration = Duration.ofHours(3);
-//        TemporalAmount duration = Duration.ofSeconds(45);
+//        TemporalAmount period = Period.ofDays(10);
+        TemporalAmount duration = Duration.ofSeconds(45);
+
+//        TemporalAmount duration = Duration.ofHours(3);
         UserSession userSession = userSessionDao.addSession(userId, duration);
         return userSession;
     }

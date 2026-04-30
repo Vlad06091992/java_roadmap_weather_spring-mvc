@@ -11,6 +11,8 @@ import weather_app.components.CookieManager;
 import weather_app.exceptions.NotAuthorizedException;
 import weather_app.services.AuthService;
 
+import java.util.Optional;
+
 @Slf4j
 @AllArgsConstructor
 @Component
@@ -27,11 +29,13 @@ public class SessionInterceptor implements HandlerInterceptor {
         Cookie sessionCookie = cookieManager
                 .getCookieByName(cookies, "session_id")
                 .orElseThrow(NotAuthorizedException::new);
-        boolean isValid = authService.validateSession(sessionCookie, request);
+        Optional<Long> userId = authService.getAuthorizedUserId(sessionCookie);
 
-        if (!isValid) {
+        if (userId.isEmpty()) {
             throw new NotAuthorizedException();
+        } else {
+            request.setAttribute("userId", userId);
+            return true;
         }
-        return true;
     }
 }
