@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
+import weather_app.entities.User;
 import weather_app.entities.UserSession;
 
 import java.time.OffsetDateTime;
@@ -17,8 +18,9 @@ public class UserSessionDao {
 
     public UserSession addSession(Long userId, TemporalAmount expiresAt) {
         Session session = sessionFactory.getCurrentSession();
+        User user = session.getReference(User.class, userId);
         UserSession userSession = new UserSession();
-        userSession.setUserId(userId);
+        userSession.setUser(user);
         OffsetDateTime plus = OffsetDateTime.now().plus(expiresAt);
         userSession.setExpiresAt(plus);
         session.persist(userSession);
@@ -38,6 +40,14 @@ public class UserSessionDao {
         Session session = sessionFactory.getCurrentSession();
         session
                 .createNativeQuery("DELETE FROM public.sessions s WHERE s.expires_at < NOW()")
+                .executeUpdate();
+    }
+
+    public void removeUserSessions(String userId) {
+        Session session = sessionFactory.getCurrentSession();
+        session
+                .createQuery("DELETE FROM UserSession WHERE user.id=:userId")
+                .setParameter("userId", userId)
                 .executeUpdate();
     }
 }

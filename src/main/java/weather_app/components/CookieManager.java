@@ -35,4 +35,15 @@ public class CookieManager {
         return Optional.ofNullable(cookie);
 
     }
+
+
+    public Cookie invalidateCookie(Cookie cookie) {
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(cookie.isHttpOnly());          // Accessible only by server (prevents XSS)
+        cookie.setSecure(cookie.getSecure());            // Send only over HTTPS
+        cookie.setPath(cookie.getPath());
+
+        return cookie;
+
+    }
 }

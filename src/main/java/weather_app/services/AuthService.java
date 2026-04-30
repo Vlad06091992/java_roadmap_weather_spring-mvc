@@ -1,6 +1,7 @@
 package weather_app.services;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,6 @@ import java.time.temporal.TemporalAmount;
 @AllArgsConstructor
 @Slf4j
 public class AuthService {
-
     private final PasswordEncoder passwordEncoder;
     private final UserDao userDao;
     private final UserSessionDao userSessionDao;
@@ -49,32 +49,51 @@ public class AuthService {
         response.addCookie(cookie);
     }
 
-    public boolean isValidSession(Cookie cookie) {
+
+    private void setUserIdAttribute(HttpServletRequest request, Long userId) {
+        request.setAttribute("userId", userId);
+    }
+
+    public boolean validateSession(Cookie cookie, HttpServletRequest request) {
         String uuid = cookie.getValue();
         UserSession userSession = userSessionDao
                 .getUserSessionById(uuid)
                 .orElseThrow(NotAuthorizedException::new);
 
         OffsetDateTime expiresAr = userSession.getExpiresAt();
+        long userId = userSession.getUser().getId();
         OffsetDateTime now = OffsetDateTime.now();
 
         if (expiresAr.isBefore(now)) {
             return false;
         } else {
+            setUserIdAttribute(request, userId);
             return true;
         }
     }
 
-    public void removeExpiredSessions(){
+    public void removeExpiredSessions() {
         userSessionDao.removeExpiredSessions();
     }
 
+    public Cookie logout(Cookie[] cookies, String userId) {
+        Cookie sessionCookie = cookieManager
+                .getCookieByName(cookies, "session_id")
+                .orElseThrow(NotAuthorizedException::new);
+
+        userSessionDao.removeUserSessions(userId);
+        Cookie invalidatedSessionCookie = cookieManager.invalidateCookie(sessionCookie);
+       return invalidatedSessionCookie;
+    }
 
 
     private UserSession createSession(Long userId) {
         //        TemporalAmount period = Period.ofDays(10);
-        TemporalAmount duration = Duration.ofSeconds(45);
+        TemporalAmount duration = Duration.ofHours(3);
+//        TemporalAmount duration = Duration.ofSeconds(45);
         UserSession userSession = userSessionDao.addSession(userId, duration);
         return userSession;
     }
+
+
 }

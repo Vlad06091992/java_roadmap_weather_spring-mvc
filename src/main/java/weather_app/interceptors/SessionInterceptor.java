@@ -27,7 +27,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         Cookie sessionCookie = cookieManager
                 .getCookieByName(cookies, "session_id")
                 .orElseThrow(NotAuthorizedException::new);
-        boolean isValid = authService.isValidSession(sessionCookie);
+        boolean isValid = authService.validateSession(sessionCookie, request);
 
         if (!isValid) {
             throw new NotAuthorizedException();

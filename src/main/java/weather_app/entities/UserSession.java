@@ -21,12 +21,11 @@ public class UserSession {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "expires_at", nullable = false)
     @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     private OffsetDateTime expiresAt;
-
-
 }

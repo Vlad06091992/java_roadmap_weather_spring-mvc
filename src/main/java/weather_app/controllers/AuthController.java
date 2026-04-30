@@ -1,5 +1,7 @@
 package weather_app.controllers;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,22 +13,24 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import weather_app.components.ViewErrorHandler;
 import weather_app.dto.LoginDTO;
 import weather_app.entities.User;
 import weather_app.exceptions.IncorrectLoginDataException;
+import weather_app.exceptions.NotAuthorizedException;
 import weather_app.services.AuthService;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class LoginController {
+public class AuthController {
     private final ViewErrorHandler viewErrorHandler;
     private final AuthService authService ;
 
     @PostMapping("/login")
-    public String register(@ModelAttribute @Valid LoginDTO loginDTO, BindingResult bindingResult, Model model,  HttpServletResponse response) throws IncorrectLoginDataException {
+    public String login(@ModelAttribute @Valid LoginDTO loginDTO, BindingResult bindingResult, Model model,  HttpServletResponse response) throws IncorrectLoginDataException {
         List<FieldError> errorList = bindingResult.getFieldErrors();
         if (bindingResult.hasErrors()) {
             log.info("Validation errors found {}", bindingResult.getFieldErrors());
@@ -38,6 +42,13 @@ public class LoginController {
             authService.setCredentials(response, user.getId());
             return "redirect:/";
         }
+    }
+
+    @PostMapping("/logout")
+    public String logout(@RequestAttribute("userId") String userId, HttpServletRequest request, HttpServletResponse response) throws IncorrectLoginDataException {
+        Cookie[] cookies = request.getCookies();
+        response.addCookie(authService.logout(cookies,userId));
+        return "login";
     }
 
     @GetMapping(value = "/login")
