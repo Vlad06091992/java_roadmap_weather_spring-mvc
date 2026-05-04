@@ -34,7 +34,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 //                .excludePathPatterns("/login","/register");
 //TODO добавить интерцептор, который редиректит с логина и регистрации на главную, если авторизован пользователь
         registry.addInterceptor(myInterceptor)
-                .addPathPatterns("/", "search-location").order(1);
+                .addPathPatterns("/", "/search-location","/add-location");
 //                .excludePathPatterns("/login","/register");
     }
 
