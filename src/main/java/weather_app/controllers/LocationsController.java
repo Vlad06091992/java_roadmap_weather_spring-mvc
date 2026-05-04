@@ -6,12 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import weather_app.dto.location.LocationDTO;
-import weather_app.entities.User;
-import weather_app.entities.UserLocation;
-import weather_app.exceptions.IncorrectLoginDataException;
 import weather_app.dto.location.Location;
-import weather_app.networkAdapter.WeatherData;
+import weather_app.dto.location.LocationDTO;
+import weather_app.exceptions.IncorrectLoginDataException;
 import weather_app.services.LocationService;
 
 import java.util.ArrayList;
@@ -21,8 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class LocationsController {
-
-    private final WeatherData weatherData;
     private final LocationService locationService;
 
     @GetMapping("/search-location")
@@ -42,13 +37,7 @@ public class LocationsController {
 
     @PostMapping("/add-location")
     public String addLocation(@ModelAttribute LocationDTO location, @RequestAttribute("userId") String userId) throws IncorrectLoginDataException {
-      log.info(location.toString());
-      log.info(userId);
-
-      UserLocation userLocation = locationService.addLocation(location,userId);
-
-      User user = userLocation.getUser();
-
+        locationService.addLocation(location,userId);
         return "search";
     }
 }

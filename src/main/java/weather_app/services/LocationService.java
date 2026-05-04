@@ -11,7 +11,7 @@ import weather_app.dao.LocationsDao;
 import weather_app.dto.location.LocationDTO;
 import weather_app.entities.UserLocation;
 import weather_app.dto.location.Location;
-import weather_app.networkAdapter.WeatherData;
+import weather_app.networkAdapter.WeatherApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 @Transactional
 @AllArgsConstructor
 public class LocationService {
-    private final WeatherData weatherData;
+    private final WeatherApiClient weatherData;
     private final ObjectMapper objectMapper;
     private final LocationsDao locationsDao;
 
@@ -40,7 +40,7 @@ public class LocationService {
 
     }
 
-    public UserLocation addLocation(LocationDTO locationDTO, String userId) {
-        return locationsDao.addLocation(locationDTO, userId);
+    public void addLocation(LocationDTO locationDTO, String userId) {
+        locationsDao.addLocation(locationDTO, userId);
     }
 }

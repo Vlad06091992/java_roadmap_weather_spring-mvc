@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import weather_app.dto.location.LocationDTO;
 import weather_app.entities.User;
 import weather_app.entities.UserLocation;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,6 +24,16 @@ public class LocationsDao {
         session.persist(userLocation);
 
         return userLocation;
+    }
+
+    public List<UserLocation> getLocations(String userId) {
+        Session session = sessionFactory.getCurrentSession();
+        List<UserLocation> userLocations = session
+                .createQuery("from UserLocation where user.id = :userId order by id desc")
+                .setParameter("userId", userId)
+                .getResultList();
+
+        return userLocations;
     }
 
 }

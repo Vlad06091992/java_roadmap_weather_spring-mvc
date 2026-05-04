@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<div id="in-page-channel-node-id" data-channel-name="in_page_channel_6iX5LX"></div>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Weather Viewer – Homepage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+<body>
+
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="https://zhukovsd.github.io/weather-viewer-html-layouts/index.html#">
+            <img th:src="@{/images/weather-app.png}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            Weather Tracker
+        </a>
+        <div class="d-flex align-items-center">
+            <span class="navbar-text me-3">zhukovsd</span>
+            <form th:action="@{/logout}" method="post">
+                <button class="btn btn-outline-danger">Sign out</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<section id="page-content">
+    <div class="container mt-4">
+        <div class="d-flex my-4">
+            <div class="input-group location-search-input-group me-3">
+                <input class="form-control" type="text" name="name" placeholder="Enter location" required="">
+                <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
+                        onclick="this.previousElementSibling.value=&#39;&#39;">
+                    ×
+                </button>
+            </div>
+            <button class="btn btn-outline-success">Search</button>
+        </div>
+
+        <div>
+            <div class="row">
+                <div th:each="weatherItem : ${weather}" class="col-12 col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100 position-relative weather-card">
+                        <div class="position-absolute weather-card-delete-form">
+                            <button class="btn-close" aria-label="Delete"></button>
+                        </div>
+                        <img class="card-img-top img-fluid" th:src="${weatherItem.getWeatherIconUrl()}" alt="Weather icon"/>
+                        <div class="card-body d-flex flex-column">
+                            <h1 th:text="${weatherItem.getCelsiusTemperature() + '°C' }" class="card-text">7°C</h1>
+                            <h3 th:text="${weatherItem.getName() + ', ' + weatherItem.getCountry() }" class="card-title">Tbilisi, GE</h3>
+                            <p th:text="${'Feels like ' + weatherItem.getCelsiusFeelsLikeTemperature() + '. ' + weatherItem.getDescription() }" class="card-text mb-1"></p>
+                            <p th:text="${'Humidity: ' + weatherItem.getHumidity() + '%' }" class="card-text mb-1">Humidity: 70%</p>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--<footer class="d-flex flex-wrap justify-content-between align-items-center py-3 mt-4 border-top">-->
+<!--    <div class="px-4">-->
+<!--        <span>© Weather Viewer, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a> roadmap.</span>-->
+<!--    </div>-->
+<!--</footer>-->
+

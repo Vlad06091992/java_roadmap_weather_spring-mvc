@@ -81,9 +81,9 @@ public class AuthService {
 
     private UserSession createSession(Long userId) {
 //        TemporalAmount period = Period.ofDays(10);
-        TemporalAmount duration = Duration.ofSeconds(45);
+//        TemporalAmount duration = Duration.ofSeconds(45);
 
-//        TemporalAmount duration = Duration.ofHours(3);
+        TemporalAmount duration = Duration.ofHours(3);
         UserSession userSession = userSessionDao.addSession(userId, duration);
         return userSession;
     }
