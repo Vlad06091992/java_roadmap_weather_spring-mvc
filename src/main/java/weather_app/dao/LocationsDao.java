@@ -26,6 +26,18 @@ public class LocationsDao {
         return userLocation;
     }
 
+    public void deleteLocation(LocationDTO locationDTO, String userId) {
+        Session session = sessionFactory.getCurrentSession();
+        session.createNativeQuery("DELETE FROM public.user_locations\n" +
+                        "WHERE ABS(latitude - :latitude) < 0.00005\n" +
+                        "  AND ABS(longitude - :longitude) < 0.00005\n" +
+                        "  AND user_id = :userId")
+                .setParameter("userId", Long.parseLong(userId))
+                .setParameter("latitude", locationDTO.getLatitude())
+                .setParameter("longitude", locationDTO.getLongitude())
+                .executeUpdate();
+    }
+
     public List<UserLocation> getLocations(String userId) {
         Session session = sessionFactory.getCurrentSession();
         List<UserLocation> userLocations = session

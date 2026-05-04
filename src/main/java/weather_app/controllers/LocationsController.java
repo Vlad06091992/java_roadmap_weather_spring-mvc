@@ -38,6 +38,12 @@ public class LocationsController {
     @PostMapping("/add-location")
     public String addLocation(@ModelAttribute LocationDTO location, @RequestAttribute("userId") String userId) throws IncorrectLoginDataException {
         locationService.addLocation(location,userId);
-        return "search";
+        return "redirect:/";
+    }
+
+    @PostMapping("/delete-location")
+    public String deleteLocation(@ModelAttribute LocationDTO location, @RequestAttribute("userId") String userId) throws IncorrectLoginDataException {
+        locationService.deleteLocation(location,userId);
+        return "redirect:/";
     }
 }

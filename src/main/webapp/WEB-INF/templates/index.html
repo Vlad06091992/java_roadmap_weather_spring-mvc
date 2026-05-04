@@ -11,7 +11,8 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="https://zhukovsd.github.io/weather-viewer-html-layouts/index.html#">
-            <img th:src="@{/images/weather-app.png}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+            <img th:src="@{/images/weather-app.png}" alt="" width="30" height="24"
+                 class="d-inline-block align-text-top">
             Weather Tracker
         </a>
         <div class="d-flex align-items-center">
@@ -25,30 +26,42 @@
 
 <section id="page-content">
     <div class="container mt-4">
-        <div class="d-flex my-4">
-            <div class="input-group location-search-input-group me-3">
-                <input class="form-control" type="text" name="name" placeholder="Enter location" required="">
-                <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
-                        onclick="this.previousElementSibling.value=&#39;&#39;">
-                    ×
-                </button>
-            </div>
-            <button class="btn btn-outline-success">Search</button>
-        </div>
+        <form th:action="@{/search-location}" method="get" class="mt-4">
+            <div class="d-flex my-4">
+                <div class="input-group location-search-input-group me-3">
 
+                    <input class="form-control" type="text" name="locationName" placeholder="Enter location"
+                           required="">
+                    <button class="btn btn-outline-secondary btn-sm clear-input-button" type="button"
+                            onclick="this.previousElementSibling.value=&#39;&#39;">
+                        ×
+                    </button>
+                </div>
+                <button class="btn btn-outline-success">Search</button>
+            </div>
+        </form>
         <div>
             <div class="row">
                 <div th:each="weatherItem : ${weather}" class="col-12 col-lg-3 col-md-6 mb-4">
                     <div class="card h-100 position-relative weather-card">
+                        <form th:action="@{/delete-location}" method="post">
+                            <input name="name" id="name" th:value="${weatherItem.name}" type="hidden"/>
+                            <input name="longitude" id="longitude" th:value="${weatherItem.lon}" type="hidden"/>
+                            <input name="latitude" id="latitude" th:value="${weatherItem.lat}" type="hidden"/>
                         <div class="position-absolute weather-card-delete-form">
-                            <button class="btn-close" aria-label="Delete"></button>
+                            <button type="submit" class="btn-close" aria-label="Delete"></button>
                         </div>
-                        <img class="card-img-top img-fluid" th:src="${weatherItem.getWeatherIconUrl()}" alt="Weather icon"/>
+                        </form>
+                        <img class="card-img-top img-fluid" th:src="${weatherItem.getWeatherIconUrl()}"
+                             alt="Weather icon"/>
                         <div class="card-body d-flex flex-column">
                             <h1 th:text="${weatherItem.getCelsiusTemperature() + '°C' }" class="card-text">7°C</h1>
-                            <h3 th:text="${weatherItem.getName() + ', ' + weatherItem.getCountry() }" class="card-title">Tbilisi, GE</h3>
-                            <p th:text="${'Feels like ' + weatherItem.getCelsiusFeelsLikeTemperature() + '. ' + weatherItem.getDescription() }" class="card-text mb-1"></p>
-                            <p th:text="${'Humidity: ' + weatherItem.getHumidity() + '%' }" class="card-text mb-1">Humidity: 70%</p>
+                            <h3 th:text="${weatherItem.getName() + ', ' + weatherItem.getCountry() }"
+                                class="card-title">Tbilisi, GE</h3>
+                            <p th:text="${'Feels like ' + weatherItem.getCelsiusFeelsLikeTemperature() + '. ' + weatherItem.getDescription() }"
+                               class="card-text mb-1"></p>
+                            <p th:text="${'Humidity: ' + weatherItem.getHumidity() + '%' }" class="card-text mb-1">
+                                Humidity: 70%</p>
                         </div>
 
 

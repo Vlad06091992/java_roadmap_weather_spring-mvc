@@ -43,4 +43,8 @@ public class LocationService {
     public void addLocation(LocationDTO locationDTO, String userId) {
         locationsDao.addLocation(locationDTO, userId);
     }
+
+    public void deleteLocation(LocationDTO locationDTO, String userId) {
+        locationsDao.deleteLocation(locationDTO, userId);
+    }
 }
