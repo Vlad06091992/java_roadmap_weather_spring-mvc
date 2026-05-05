@@ -26,20 +26,52 @@ public class WeatherService {
     private final WeatherApiClient weatherData;
     private final LocationsDao locationsDao;
 
+    public <T> T extractSafetyValue(JsonNode jsonNode, Class<T> targetType) {
+
+        if (jsonNode != null && !jsonNode.isNull()) {
+            if (targetType == String.class) {
+                return targetType.cast(jsonNode.asText());
+            }
+
+            if (targetType == Byte.class) {
+                return targetType.cast(Byte.valueOf((byte) jsonNode.asInt()));
+            }
+
+            if (targetType == Float.class) {
+                return targetType.cast(Float.valueOf((float) jsonNode.asDouble()));
+            }
+
+        } else {
+            if (targetType == String.class) {
+                return null;
+            }
+
+            if (targetType == Byte.class) {
+                return targetType.cast(Byte.valueOf((byte) 0));
+            }
+
+            if (targetType == Float.class) {
+                return targetType.cast(Float.valueOf((float) 0.0));
+            }
+        }
+        return null;
+    }
+
     private WeatherResponseDTO mapResponse(String json) {
 
         try {
             JsonNode jsonNode = objectMapper.readTree(json);
-            String name = jsonNode.get("name").asText();
-            String country = jsonNode.get("sys").get("country").asText();
-            String main = jsonNode.get("weather").get(0).get("main").asText();
-            String description = jsonNode.get("weather").get(0).get("description").asText();
-            String icon = jsonNode.get("weather").get(0).get("icon").asText();
-            byte humidity = Byte.parseByte(jsonNode.get("main").get("humidity").asText());
-            float kelvinTemperature = Float.parseFloat(jsonNode.get("main").get("temp").asText());
-            float kelvinFeelsLikeTemperature = Float.parseFloat(jsonNode.get("main").get("feels_like").asText());
-            float lon = Float.parseFloat(jsonNode.get("coord").get("lon").asText());
-            float lat = Float.parseFloat(jsonNode.get("coord").get("lat").asText());
+            log.debug("START");
+            String name = extractSafetyValue(jsonNode.get("name"), String.class);
+            String country = extractSafetyValue(jsonNode.get("sys").get("country"), String.class);
+            String main = extractSafetyValue(jsonNode.get("weather").get(0).get("main"), String.class);
+            String description = extractSafetyValue(jsonNode.get("weather").get(0).get("description"), String.class);
+            String icon = extractSafetyValue(jsonNode.get("weather").get(0).get("icon"), String.class);
+            byte humidity = extractSafetyValue(jsonNode.get("main").get("humidity"), Byte.class);
+            float kelvinTemperature = extractSafetyValue(jsonNode.get("main").get("temp"), Float.class);
+            float kelvinFeelsLikeTemperature = extractSafetyValue(jsonNode.get("main").get("feels_like"), Float.class);
+            float lon = extractSafetyValue(jsonNode.get("coord").get("lon"), Float.class);
+            float lat = extractSafetyValue(jsonNode.get("coord").get("lat"), Float.class);
 
             WeatherResponseDTO weatherDTO = WeatherResponseDTO.builder()
                     .country(country)
@@ -58,6 +90,8 @@ public class WeatherService {
 
             return weatherDTO;
         } catch (JsonProcessingException ex) {
+            throw new RuntimeException("Fatal JSON error", ex);
+        } catch (RuntimeException ex) {
             throw new RuntimeException("Fatal JSON error", ex);
         }
 
