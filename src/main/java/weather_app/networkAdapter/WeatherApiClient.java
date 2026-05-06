@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
+import weather_app.exceptions.IncorrectLocationResponse;
+import weather_app.exceptions.IncorrectWeatherResponse;
 
 @Component
 @AllArgsConstructor
@@ -33,19 +35,19 @@ public class WeatherApiClient {
 
             String result = uri
                     .retrieve()
-//                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-//                        // Handle 4xx errors (e.g., Log and throw custom exception)
-//                        throw new MyCustomException("Client error occurred: " + response.getStatusCode());
-//                    })
-//                    .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
-//                        // Handle 5xx errors
-//                        throw new MyCustomException("Server error occurred");
-//                    })
+                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                        // Handle 4xx errors (e.g., Log and throw custom exception)
+                        throw new IncorrectWeatherResponse();
+                    })
+                    .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                        // Handle 5xx errors
+                        throw new IncorrectWeatherResponse();
+                    })
                     .body(String.class);
 
             return result;
         } catch (Exception e) {
-            return null;
+            throw new IncorrectWeatherResponse();
         }
 
     }
@@ -72,22 +74,22 @@ public class WeatherApiClient {
 
             String result = uri
                     .retrieve()
-//                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-//                        // Handle 4xx errors (e.g., Log and throw custom exception)
-//                        throw new MyCustomException("Client error occurred: " + response.getStatusCode());
-//                    })
-//                    .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
-//                        // Handle 5xx errors
-//                        throw new MyCustomException("Server error occurred");
-//                    })
+                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                        // Handle 4xx errors (e.g., Log and throw custom exception)
+                        throw new IncorrectLocationResponse();
+                    })
+                    .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                        // Handle 5xx errors
+                        throw new IncorrectLocationResponse();
+                    })
                     .body(String.class);
 
             return result;
         } catch (ResourceAccessException e) {
             System.out.println("No response from server: " + e.getMessage());
-            return null;
+            throw new IncorrectLocationResponse();
         } catch (Exception e) {
-            return null;
+            throw new IncorrectLocationResponse();
         }
 
 

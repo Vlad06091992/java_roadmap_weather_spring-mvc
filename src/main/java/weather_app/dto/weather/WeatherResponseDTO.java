@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class WeatherResponseDTO {
-
     // страна в табличке
     String country;
     // название населенного пункта в табличке

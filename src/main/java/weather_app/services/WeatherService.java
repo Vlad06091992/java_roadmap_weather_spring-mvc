@@ -9,8 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weather_app.dao.LocationsDao;
+import weather_app.dto.weather.EmptyResponseDTO;
 import weather_app.dto.weather.WeatherResponseDTO;
 import weather_app.entities.UserLocation;
+import weather_app.exceptions.IncorrectWeatherResponse;
 import weather_app.networkAdapter.WeatherApiClient;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 public class WeatherService {
 
     private final ObjectMapper objectMapper;
-    private final WeatherApiClient weatherData;
+    private final WeatherApiClient weatherApiClient;
     private final LocationsDao locationsDao;
 
     public <T> T extractSafetyValue(JsonNode jsonNode, Class<T> targetType) {
@@ -61,7 +63,7 @@ public class WeatherService {
 
         try {
             JsonNode jsonNode = objectMapper.readTree(json);
-            log.debug("START");
+            WeatherResponseDTO weatherDTO;
             String name = extractSafetyValue(jsonNode.get("name"), String.class);
             String country = extractSafetyValue(jsonNode.get("sys").get("country"), String.class);
             String main = extractSafetyValue(jsonNode.get("weather").get(0).get("main"), String.class);
@@ -73,7 +75,7 @@ public class WeatherService {
             float lon = extractSafetyValue(jsonNode.get("coord").get("lon"), Float.class);
             float lat = extractSafetyValue(jsonNode.get("coord").get("lat"), Float.class);
 
-            WeatherResponseDTO weatherDTO = WeatherResponseDTO.builder()
+            weatherDTO = WeatherResponseDTO.builder()
                     .country(country)
                     .name(name)
                     .main(main)
@@ -91,15 +93,20 @@ public class WeatherService {
             return weatherDTO;
         } catch (JsonProcessingException ex) {
             throw new RuntimeException("Fatal JSON error", ex);
-        } catch (RuntimeException ex) {
+        }  catch (RuntimeException ex) {
             throw new RuntimeException("Fatal JSON error", ex);
         }
 
     }
 
     public WeatherResponseDTO getWeatherResponseDTO(float lat, float lon) {
-        String json = weatherData.getWeatherByLocation(lat, lon);
-        return mapResponse(json);
+        try {
+            String json = weatherApiClient.getWeatherByLocation(lat, lon);
+            return mapResponse(json);
+        } catch (IncorrectWeatherResponse ex) {
+            return new EmptyResponseDTO();
+        }
+
     }
 
     public List<WeatherResponseDTO> getWeatherResponsesDTO(String userId) {
@@ -109,6 +116,7 @@ public class WeatherService {
         List<WeatherResponseDTO> weatherResponsesDTO = userLocations
                 .stream()
                 .map((ul) -> getWeatherResponseDTO(ul.getLatitude(), ul.getLongitude()))
+                .filter(item -> !(item instanceof EmptyResponseDTO))
                 .collect(Collectors.toList());
 
         return weatherResponsesDTO;

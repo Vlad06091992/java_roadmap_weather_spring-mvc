@@ -11,6 +11,7 @@ import weather_app.dao.LocationsDao;
 import weather_app.dto.location.LocationDTO;
 import weather_app.entities.UserLocation;
 import weather_app.dto.location.Location;
+import weather_app.exceptions.IncorrectLocationResponse;
 import weather_app.networkAdapter.WeatherApiClient;
 
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ public class LocationService {
                     });
             log.info("getLocationsByName returns {} locations", locations.size());
             return locations;
+        } catch (IncorrectLocationResponse ex) {
+            return new ArrayList<>();
         } catch (JsonProcessingException ex) {
             throw new RuntimeException(ex.getMessage());
         }
