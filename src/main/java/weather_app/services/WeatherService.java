@@ -9,13 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weather_app.dao.LocationsDao;
-import weather_app.dto.weather.EmptyResponseDTO;
 import weather_app.dto.weather.WeatherResponseDTO;
 import weather_app.entities.UserLocation;
 import weather_app.exceptions.IncorrectWeatherResponse;
 import weather_app.networkAdapter.WeatherApiClient;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -99,26 +99,22 @@ public class WeatherService {
 
     }
 
-    public WeatherResponseDTO getWeatherResponseDTO(float lat, float lon) {
+    public Optional<WeatherResponseDTO> getWeatherResponseDTO(float lat, float lon) {
         try {
             String json = weatherApiClient.getWeatherByLocation(lat, lon);
-            return mapResponse(json);
+            return Optional.of(mapResponse(json));
         } catch (IncorrectWeatherResponse ex) {
-            return new EmptyResponseDTO();
+            return Optional.empty();
         }
-
     }
 
     public List<WeatherResponseDTO> getWeatherResponsesDTO(String userId) {
-
         List<UserLocation> userLocations = locationsDao.getLocations(userId);
 
-        List<WeatherResponseDTO> weatherResponsesDTO = userLocations
+        return userLocations
                 .stream()
-                .map((ul) -> getWeatherResponseDTO(ul.getLatitude(), ul.getLongitude()))
-                .filter(item -> !(item instanceof EmptyResponseDTO))
+                .map(ul -> getWeatherResponseDTO(ul.getLatitude(), ul.getLongitude()))
+                .flatMap(Optional::stream)
                 .collect(Collectors.toList());
-
-        return weatherResponsesDTO;
     }
 }
