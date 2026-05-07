@@ -10,31 +10,24 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-public class HibernateConf {
+public class HibernateConfig {
 
+    final String HIKARI_PROPERTY_FILENAME = "hikari.properties";
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
         sessionFactory.setPackagesToScan("weather_app.entities");
-        sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;
     }
 
     @Bean
     public DataSource dataSource() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:postgresql://localhost:5432/weather_db");
-        config.setDriverClassName("org.postgresql.Driver");
-        config.setUsername("java_user");
-        config.setPassword("java_password");
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.setMaximumPoolSize(10);
+        HikariConfig config = new HikariConfig(HIKARI_PROPERTY_FILENAME);
         return new HikariDataSource(config);
     }
 
@@ -44,15 +37,5 @@ public class HibernateConf {
                 = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory().getObject());
         return transactionManager;
-    }
-
-    private Properties hibernateProperties() {
-        Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "none");
-        hibernateProperties.setProperty(
-                "hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-
-        return hibernateProperties;
     }
 }
