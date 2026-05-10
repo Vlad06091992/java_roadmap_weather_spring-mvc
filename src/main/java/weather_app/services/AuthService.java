@@ -1,8 +1,10 @@
 package weather_app.services;
 
 import jakarta.servlet.http.Cookie;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +23,14 @@ import java.util.Optional;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
+@PropertySource("classpath:application.properties")
 @Slf4j
 public class AuthService {
+
+    @Value("${session-duration-hours}")
+    private int sessionDuration;
+
     private final PasswordEncoder passwordEncoder;
     private final UserDao userDao;
     private final UserSessionDao userSessionDao;
@@ -82,8 +89,7 @@ public class AuthService {
     private UserSession createSession(Long userId) {
 //        TemporalAmount period = Period.ofDays(10);
 //        TemporalAmount duration = Duration.ofSeconds(45);
-
-        TemporalAmount duration = Duration.ofHours(3);
+        TemporalAmount duration = Duration.ofHours(sessionDuration);
         UserSession userSession = userSessionDao.addSession(userId, duration);
         return userSession;
     }
