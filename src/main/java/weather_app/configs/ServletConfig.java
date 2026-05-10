@@ -1,16 +1,11 @@
 package weather_app.configs;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -19,16 +14,17 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import weather_app.interceptors.LoginInterceptor;
 import weather_app.interceptors.SessionInterceptor;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"weather_app.services", "weather_app.interceptors","weather_app.components","weather_app.dao"})
-@Import({HibernateConfig.class, LiquibaseConfig.class})
+@ComponentScan("weather_app")
+@RequiredArgsConstructor
 public class ServletConfig implements WebMvcConfigurer {
 
-    @Autowired
-    private SessionInterceptor myInterceptor;
+    private final SessionInterceptor sessionInterceptor;
+    private final LoginInterceptor loginInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -39,9 +35,12 @@ public class ServletConfig implements WebMvcConfigurer {
         //                .addPathPatterns("/**")
         //                .excludePathPatterns("/login","/register");
         //TODO добавить интерцептор, который редиректит с логина и регистрации на главную, если авторизован пользователь
-        registry.addInterceptor(myInterceptor)
+        registry
+                .addInterceptor(sessionInterceptor)
                 //                .addPathPatterns("/", "/search-location","/add-location","/delete-location","/logout");
-                .excludePathPatterns("/login","/register","/images");
+                .excludePathPatterns("/login", "/register", "/images/*","/css/*").order(1);
+
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/login", "/register").order(2);
     }
 
     @Override
@@ -50,8 +49,6 @@ public class ServletConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/css/**").addResourceLocations("/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/js/");
     }
-
-
 
 
     @Bean
