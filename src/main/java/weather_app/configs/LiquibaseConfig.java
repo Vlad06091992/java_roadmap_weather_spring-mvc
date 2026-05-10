@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 public class LiquibaseConfig {
     @Bean
     public SpringLiquibase liquibase(DataSource dataSource) {
+        System.out.println(">>> CREATING MAIN LIQUIBASE BEAN");
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog("classpath:config/liquibase/master.xml");

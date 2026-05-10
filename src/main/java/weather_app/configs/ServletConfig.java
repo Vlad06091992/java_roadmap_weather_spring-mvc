@@ -23,7 +23,7 @@ import weather_app.interceptors.SessionInterceptor;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("weather_app")
+@ComponentScan(basePackages = {"weather_app.services", "weather_app.interceptors","weather_app.components","weather_app.dao"})
 @Import({HibernateConfig.class, LiquibaseConfig.class})
 public class ServletConfig implements WebMvcConfigurer {
 
