@@ -5,13 +5,53 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
+    <!-- Создаем роль/пользователя, если её нет -->
+    <changeSet id="0" author="you">
+        <sql splitStatements="false">
+            DO $$
+            BEGIN
+                IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'java_user') THEN
+            CREATE ROLE java_user WITH LOGIN PASSWORD 'java_password';
+            GRANT CONNECT ON DATABASE weather_db TO java_user;
+                    GRANT USAGE ON SCHEMA public TO java_user;
+                    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO java_user;
+                    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO java_user;
+            END IF;
+            END
+            $$;
+        </sql>
+        <rollback>
+            <sql>DROP ROLE IF EXISTS java_user;</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- Даем права на схему public -->
+    <changeSet id="0-1" author="you">
+        <sql>
+            GRANT ALL ON SCHEMA public TO java_user;
+            GRANT CREATE ON SCHEMA public TO java_user;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO java_user;
+            ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO java_user;
+        </sql>
+    </changeSet>
+
+    <!-- Создаем таблицу users -->
     <changeSet id="1" author="you">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" nullable="true"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
         </createTable>
+        <rollback>
+            <dropTable tableName="users"/>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>
