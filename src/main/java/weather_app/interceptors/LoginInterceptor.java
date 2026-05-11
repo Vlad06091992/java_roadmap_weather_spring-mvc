@@ -24,18 +24,23 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        log.info("preHandle");
         Cookie[] cookies = request.getCookies();
 
-        Cookie sessionCookie = cookieManager
-                .getCookieByName(cookies, "session_id")
-                .orElseThrow(NotAuthorizedException::new);
-        Optional<Long> userId = authService.getAuthorizedUserId(sessionCookie);
+        Optional<Cookie> sessionCookie = cookieManager
+                .getCookieByName(cookies, "session_id");
 
-        if (!userId.isEmpty()) {
-            response.sendRedirect("/");
-            return false;
+        if (sessionCookie.isPresent()) {
+        Cookie cookie = sessionCookie.get();
+            Optional<Long> userId = authService.getAuthorizedUserId(cookie);
+            if (!userId.isEmpty()) {
+                response.sendRedirect("/");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return  true;
         }
-        return true;
+
     }
 }
