@@ -50,8 +50,6 @@ public class HibernateConfig {
         String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s",
                 serverName, port, dbName);
 
-        log.info("jdbcUrl", jdbcUrl);
-
         config.setJdbcUrl(jdbcUrl);
         config.setUsername(username);
         config.setPassword(password);
