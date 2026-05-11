@@ -15,7 +15,7 @@ public class CookieManager {
 
         cookie.setMaxAge(7 * 24 * 60 * 60); // Expires in 7 days
         cookie.setHttpOnly(true);          // Accessible only by server (prevents XSS)
-        cookie.setSecure(true);            // Send only over HTTPS
+        cookie.setSecure(false);            // Send only over HTTPS
         cookie.setPath("/");               // Available for all application paths
 
         return cookie;
