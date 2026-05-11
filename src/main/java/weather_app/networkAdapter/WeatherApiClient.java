@@ -12,11 +12,9 @@ import weather_app.exceptions.IncorrectWeatherResponse;
 
 @Component
 @RequiredArgsConstructor
-@PropertySource("classpath:application.properties")
 public class WeatherApiClient {
 
-    @Value("${api-key}")
-    private String apiKey;
+    private String apiKey = System.getenv("API_KEY");
 
     private final RestClient restClient;
 

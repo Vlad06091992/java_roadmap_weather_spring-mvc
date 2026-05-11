@@ -21,7 +21,7 @@
             );
 
             ALTER TABLE IF EXISTS public.sessions
-                OWNER to postgres;
+                OWNER to java_user;
         </sql>
     </changeSet>
 

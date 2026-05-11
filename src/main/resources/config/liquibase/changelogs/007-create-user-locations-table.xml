@@ -23,7 +23,7 @@
             );
 
             ALTER TABLE IF EXISTS public.locations
-                OWNER to postgres;
+                OWNER to java_user;
         </sql>
     </changeSet>
 

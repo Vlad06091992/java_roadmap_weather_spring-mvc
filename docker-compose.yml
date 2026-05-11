@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: weather-postgres
+    environment:
+      POSTGRES_DB: weather_db
+      POSTGRES_USER: java_user
+      POSTGRES_PASSWORD: java_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U java_user -d weather_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - weather-network
+
+  weather-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - DB_SERVER_NAME=${DB_SERVER_NAME}
+      - API_KEY=${API_KEY}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - weather-network
+
+volumes:
+  postgres_data:
+
+networks:
+  weather-network:
+    driver: bridge
