@@ -32,4 +32,13 @@ public class UserDao {
                 .uniqueResult();
         return Optional.ofNullable(user);
     }
+
+    public Optional<User> findUserById(String userId) {
+        Session session = sessionFactory.getCurrentSession();
+        User user = session
+                .createQuery("from User where id=:userId", User.class)
+                .setParameter("userId", Long.valueOf(userId))
+                .uniqueResult();
+        return Optional.ofNullable(user);
+    }
 }

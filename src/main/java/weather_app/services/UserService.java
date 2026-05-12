@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import weather_app.dao.UserDao;
 import weather_app.entities.User;
 import weather_app.exceptions.UserIsExistException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -24,6 +25,14 @@ public class UserService {
             return dao.addUser(login, passwordHash);
         } catch (ConstraintViolationException ex) {
             throw new UserIsExistException();
+        } catch (Exception ex) {
+            throw new RuntimeException();
+        }
+    }
+
+    public Optional<User> findUserById(String uuid) {
+        try {
+            return dao.findUserById(uuid);
         } catch (Exception ex) {
             throw new RuntimeException();
         }
