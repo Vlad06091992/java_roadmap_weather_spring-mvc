@@ -1,6 +1,7 @@
 package weather_app.dao;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -9,21 +10,29 @@ import weather_app.entities.User;
 import weather_app.entities.UserLocation;
 import java.util.List;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class LocationsDao {
     private final SessionFactory sessionFactory;
-    public UserLocation addLocation(LocationDTO locationDTO, String userId) {
-        Session session = sessionFactory.getCurrentSession();
-        UserLocation userLocation = new UserLocation();
-        User user = session.getReference(User.class, userId);
-        userLocation.setUser(user);
-        userLocation.setLatitude(locationDTO.getLatitude());
-        userLocation.setLongitude(locationDTO.getLongitude());
-        userLocation.setName(locationDTO.getName());
-        session.persist(userLocation);
-
-        return userLocation;
+    public void addLocation(LocationDTO locationDTO, String userId) {
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            UserLocation userLocation = new UserLocation();
+            User user = session.getReference(User.class, userId);
+            userLocation.setUser(user);
+            userLocation.setLatitude(locationDTO.getLatitude());
+            userLocation.setLongitude(locationDTO.getLongitude());
+            userLocation.setName(locationDTO.getName());
+            session.persist(userLocation);
+        } catch (Exception ex) {
+            if (ex instanceof org.hibernate.exception.ConstraintViolationException) {
+                log.error("Location already exists for user {}", userId);
+            } else {
+                log.error("Unexpected error adding location for user {}: {}", userId, ex.getMessage(), ex);
+                throw new RuntimeException("Failed to add location", ex);
+            }
+        }
     }
 
     public void deleteLocation(LocationDTO locationDTO, String userId) {
