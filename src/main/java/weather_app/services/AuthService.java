@@ -56,12 +56,13 @@ public class AuthService {
 
     public Optional<Long> getAuthorizedUserId(Cookie cookie) {
         String uuid = cookie.getValue();
-        UserSession userSession = userSessionDao
-                .getUserSessionById(uuid)
-                .orElseThrow(NotAuthorizedException::new);
+        Optional<UserSession> userSession = userSessionDao
+                .getUserSessionById(uuid);
 
-        OffsetDateTime expiresAr = userSession.getExpiresAt();
-        long userId = userSession.getUser().getId();
+        if (userSession.isEmpty()) return Optional.empty();
+
+        OffsetDateTime expiresAr = userSession.get().getExpiresAt();
+        long userId = userSession.get().getUser().getId();
         OffsetDateTime now = OffsetDateTime.now();
 
         if (expiresAr.isBefore(now)) {
