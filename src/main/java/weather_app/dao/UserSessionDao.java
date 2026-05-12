@@ -10,6 +10,7 @@ import weather_app.entities.UserSession;
 import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -30,7 +31,8 @@ public class UserSessionDao {
     public Optional<UserSession> getUserSessionById(String uuid) {
         Session session = sessionFactory.getCurrentSession();
         UserSession userSession = session.createQuery(
-                        "FROM UserSession u ORDER BY u.expiresAt DESC", UserSession.class)
+                        "FROM UserSession u where id =:id ORDER BY u.expiresAt DESC", UserSession.class)
+                .setParameter("id", UUID.fromString(uuid))
                 .setMaxResults(1)
                 .uniqueResult();
         return Optional.ofNullable(userSession);
