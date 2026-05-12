@@ -114,7 +114,8 @@ public class WeatherService {
         return userLocations
                 .stream()
                 .map(ul -> getWeatherResponseDTO(ul.getLatitude(), ul.getLongitude()))
-                .flatMap(Optional::stream)
+                .filter((item) -> item.isPresent())
+                .map(item -> item.get())
                 .collect(Collectors.toList());
     }
 }
